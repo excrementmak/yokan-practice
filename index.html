@@ -1,12 +1,918 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <title>YOKAN 測試網站</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>有感創意 YOKAN CREATIVE — 把品牌想說的，變成人們想看的</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans, Inter & Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', '"Noto Sans TC"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            display: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
+          },
+          colors: {
+            yokan: {
+              blue: '#1D5BFF',
+              blueDark: '#0044E5',
+              orange: '#FF6B2C',
+              orangeHover: '#F25613',
+              paper: '#FAF9F6',
+              lightGray: '#F2F4F8',
+              navy: '#0B132B',
+              navyCard: '#131C3A',
+              ink: '#141824',
+              muted: '#5E6577',
+            }
+          },
+          letterSpacing: {
+            tightest: '-0.04em',
+            tighter: '-0.025em',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #FAF9F6;
+      color: #141824;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 毛玻璃導覽列 */
+    .glass-nav {
+      background: rgba(250, 249, 246, 0.82);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+    }
+
+    /* 有感創意藍橘漸層文字 */
+    .text-gradient-yokan {
+      background: linear-gradient(110deg, #1D5BFF 0%, #3B76FF 45%, #FF6B2C 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .text-gradient-light {
+      background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 60%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* 滾動顯現動畫 */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px) scale(0.988);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Bento 卡片微懸浮動態 */
+    .bento-card {
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 48px -12px rgba(29, 91, 255, 0.10);
+    }
+
+    .bento-card-dark:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 48px -12px rgba(255, 107, 44, 0.18);
+    }
+
+    /* 細緻光暈動畫 */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.45; transform: scale(1); }
+      50% { opacity: 0.78; transform: scale(1.07); }
+    }
+    .ambient-glow {
+      animation: pulseGlow 8s ease-in-out infinite;
+    }
+  </style>
 </head>
-<body>
-    <h1>我的第一個 Cloudflare 網站</h1>
-    <h1>這是我使用 Git 更新的網站！</h1>
-    <p>部署成功！</p>
+<body class="selection:bg-yokan-orange selection:text-white">
+
+  <!-- ==================== 1. 毛玻璃頂部導覽列（含藍橘雙層對話泡泡 Logo） ==================== -->
+  <header id="navbar" class="fixed top-0 inset-x-0 z-50 glass-nav border-b border-yokan-ink/[0.06] transition-colors duration-300">
+    <div class="max-w-[1140px] mx-auto px-6 h-14 flex items-center justify-between">
+      <!-- 有感創意 藍橘雙層對話泡泡 Logo -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="relative w-8 h-8 flex items-center justify-center">
+          <!-- 客製化 SVG：藍橘雙層對話泡泡 -->
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 transition-transform duration-300 group-hover:scale-105">
+            <!-- 後層：活力橘對話泡泡 -->
+            <path d="M16 7C24.8366 7 32 12.8203 32 20C32 27.1797 24.8366 33 16 33C13.68 33 11.48 32.59 9.5 31.86L4.5 34.5L6.2 29.4C4.2 27.05 3 23.7 3 20C3 12.8203 10.1634 7 16 7Z" fill="#FF6B2C"/>
+            <!-- 前層：皇家藍對話泡泡 -->
+            <path d="M24 11C31.1797 11 37 15.9249 37 22C37 25.12 35.46 27.93 33 29.92L34.4 34.2L29.9 32.02C28.1 32.65 26.1 33 24 33C16.8203 33 11 28.0751 11 22C11 15.9249 16.8203 11 24 11Z" fill="#1D5BFF" fill-opacity="0.95"/>
+            <!-- 對話點點細節 -->
+            <circle cx="20" cy="22" r="1.6" fill="#FFFFFF"/>
+            <circle cx="24.5" cy="22" r="1.6" fill="#FFFFFF"/>
+            <circle cx="29" cy="22" r="1.6" fill="#FFFFFF"/>
+          </svg>
+        </div>
+        <div class="flex flex-col leading-none">
+          <span class="font-extrabold text-[15px] tracking-tight text-yokan-ink">YOKAN CREATIVE</span>
+          <span class="text-[11px] font-medium text-yokan-muted tracking-wider mt-0.5">有感創意</span>
+        </div>
+      </a>
+
+      <!-- 桌面端導覽連結 -->
+      <nav class="hidden md:flex items-center gap-7 text-[13px] font-medium text-yokan-ink/80">
+        <a href="#services" class="hover:text-yokan-blue transition-colors">服務內容</a>
+        <a href="#pain-points" class="hover:text-yokan-blue transition-colors">痛點診斷</a>
+        <a href="#methodology" class="hover:text-yokan-blue transition-colors">思考方法</a>
+        <a href="#plans" class="hover:text-yokan-blue transition-colors">合作方案</a>
+        <a href="#about" class="hover:text-yokan-blue transition-colors">關於有感</a>
+      </nav>
+
+      <!-- 右側行動呼籲與手機選單按鈕 -->
+      <div class="flex items-center gap-3">
+        <a href="#contact" class="bg-yokan-orange hover:bg-yokan-orangeHover text-white text-[13px] font-semibold px-4 py-1.5 rounded-full transition-all shadow-sm shadow-orange-500/20">
+          聊聊合作
+        </a>
+        <button id="mobile-menu-btn" aria-label="開啟選單" class="md:hidden p-2 text-yokan-ink hover:bg-black/5 rounded-full transition-colors">
+          <i class="fa-solid fa-bars text-sm"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 手機版展開抽屜選單 -->
+    <div id="mobile-menu" class="hidden md:hidden bg-yokan-paper/95 backdrop-blur-xl border-b border-black/10 px-6 py-6 space-y-4">
+      <a href="#services" class="mobile-link block text-lg font-semibold text-yokan-ink">服務內容</a>
+      <a href="#pain-points" class="mobile-link block text-lg font-semibold text-yokan-ink">痛點診斷</a>
+      <a href="#methodology" class="mobile-link block text-lg font-semibold text-yokan-ink">思考方法</a>
+      <a href="#plans" class="mobile-link block text-lg font-semibold text-yokan-ink">合作方案</a>
+      <a href="#about" class="mobile-link block text-lg font-semibold text-yokan-ink">關於有感</a>
+      <a href="#contact" class="mobile-link block text-lg font-semibold text-yokan-orange">聊聊合作 &rarr;</a>
+    </div>
+  </header>
+
+  <!-- ==================== 2. HERO 旗艦主視覺區塊 ==================== -->
+  <section id="hero" class="relative pt-32 pb-20 md:pt-44 md:pb-28 px-6 overflow-hidden bg-yokan-paper">
+    <!-- 柔和藍橘環境光暈 -->
+    <div class="pointer-events-none absolute top-16 left-1/2 -translate-x-1/2 w-[760px] h-[360px] rounded-full bg-gradient-to-r from-yokan-blue/10 via-transparent to-yokan-orange/10 blur-3xl"></div>
+
+    <div class="relative z-10 max-w-[1060px] mx-auto text-center">
+      <!-- 頂部品牌定位標籤 -->
+      <div class="reveal inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white border border-yokan-blue/15 shadow-xs mb-7">
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yokan-orange opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-yokan-orange"></span>
+        </span>
+        <span class="text-[12px] font-semibold tracking-wide text-yokan-ink">
+          有感創意／把溝通做得有感 <span class="text-yokan-blue mx-1">•</span> IDEAS THAT MOVE PEOPLE
+        </span>
+      </div>
+
+      <!-- 超大主標題 -->
+      <h1 class="reveal text-4xl sm:text-6xl md:text-[78px] font-extrabold tracking-tightest leading-[1.08] text-yokan-ink mb-6">
+        把品牌想說的，<br />
+        <span class="text-gradient-yokan">變成人們想看的。</span>
+      </h1>
+
+      <!-- 副標題 -->
+      <p class="reveal max-w-2xl mx-auto text-base sm:text-xl md:text-[22px] font-normal text-yokan-muted leading-relaxed tracking-tight mb-10">
+        從策略、內容到影像執行，讓品牌被看見，也被理解。<br class="hidden sm:block" />
+        好的創意，不是只有好看——把問題問對，把內容做好。
+      </p>
+
+      <!-- 雙主色行動呼籲按鈕 -->
+      <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 md:mb-20">
+        <a href="#plans" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-yokan-orange hover:bg-yokan-orangeHover text-white font-semibold text-[15px] transition-all shadow-md shadow-orange-500/20">
+          了解服務
+        </a>
+        <a href="#about" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white hover:bg-yokan-lightGray text-yokan-blue border border-yokan-blue/20 font-semibold text-[15px] transition-all flex items-center justify-center gap-2 group">
+          <span>認識有感</span>
+          <i class="fa-solid fa-chevron-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
+        </a>
+      </div>
+
+      <!-- 旗艦級四大核心領域展示視窗 (策略 • 設計 • 影像 • 數位) -->
+      <div id="services" class="reveal relative max-w-[1060px] mx-auto rounded-[28px] md:rounded-[36px] bg-yokan-navy p-3 sm:p-5 shadow-2xl border border-yokan-blue/20">
+        <div class="relative rounded-[20px] md:rounded-[26px] overflow-hidden bg-[#0E1733] p-6 sm:p-12 text-left">
+          <!-- 藍橘雙色動態光暈 -->
+          <div class="ambient-glow absolute -top-24 -left-20 w-96 h-96 rounded-full bg-yokan-blue/30 blur-[110px]"></div>
+          <div class="ambient-glow absolute -bottom-24 -right-20 w-96 h-96 rounded-full bg-yokan-orange/25 blur-[110px]" style="animation-delay: 4s;"></div>
+
+          <div class="relative z-10">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-6 border-b border-white/10">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-yokan-orange"></span>
+                <span class="w-3 h-3 rounded-full bg-yokan-blue"></span>
+                <span class="w-3 h-3 rounded-full bg-white/25"></span>
+                <span class="ml-2 text-xs font-mono tracking-wider text-white/60">YOKAN CREATIVE CORE CAPABILITIES</span>
+              </div>
+              <span class="text-xs font-semibold text-yokan-orange tracking-widest">策略 • 設計 • 影像 • 數位</span>
+            </div>
+
+            <!-- 四大核心支柱卡片 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+              <div class="rounded-2xl bg-white/[0.06] border border-white/10 p-5 backdrop-blur-md hover:border-yokan-blue/60 transition-colors">
+                <div class="w-9 h-9 rounded-xl bg-yokan-blue/20 text-blue-300 flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-compass"></i>
+                </div>
+                <div class="text-xs font-mono text-blue-300 mb-1">01 / STRATEGY</div>
+                <h2 class="text-lg font-bold text-white mb-1.5">品牌策略定位</h2>
+                <p class="text-xs text-white/65 leading-relaxed">找出顧客真正在乎的切角，把複雜的商業價值轉化為清晰的品牌主張。</p>
+              </div>
+
+              <div class="rounded-2xl bg-white/[0.06] border border-white/10 p-5 backdrop-blur-md hover:border-yokan-orange/60 transition-colors">
+                <div class="w-9 h-9 rounded-xl bg-yokan-orange/20 text-orange-300 flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-pen-nib"></i>
+                </div>
+                <div class="text-xs font-mono text-orange-300 mb-1">02 / DESIGN</div>
+                <h2 class="text-lg font-bold text-white mb-1.5">視覺與品牌設計</h2>
+                <p class="text-xs text-white/65 leading-relaxed">建立一致且具辨識度的視覺語言，讓品牌在每一次曝光中留下深刻印象。</p>
+              </div>
+
+              <div class="rounded-2xl bg-white/[0.06] border border-white/10 p-5 backdrop-blur-md hover:border-yokan-blue/60 transition-colors">
+                <div class="w-9 h-9 rounded-xl bg-yokan-blue/20 text-blue-300 flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-clapperboard"></i>
+                </div>
+                <div class="text-xs font-mono text-blue-300 mb-1">03 / MOTION</div>
+                <h2 class="text-lg font-bold text-white mb-1.5">短影音與影像敘事</h2>
+                <p class="text-xs text-white/65 leading-relaxed">從企劃腳本、現場拍攝到節奏剪輯，用有溫度的影像讓受眾願意停下來看完。</p>
+              </div>
+
+              <div class="rounded-2xl bg-white/[0.06] border border-white/10 p-5 backdrop-blur-md hover:border-yokan-orange/60 transition-colors">
+                <div class="w-9 h-9 rounded-xl bg-yokan-orange/20 text-orange-300 flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-globe"></i>
+                </div>
+                <div class="text-xs font-mono text-orange-300 mb-1">04 / DIGITAL</div>
+                <h2 class="text-lg font-bold text-white mb-1.5">網站與數位承接</h2>
+                <p class="text-xs text-white/65 leading-relaxed">整合高轉換官網、社群投放與自動化流程，讓流量順利轉化為長期信任。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 3. 互動式痛點診斷區塊（你的品牌卡在哪？ — 從真實問題開始） ==================== -->
+  <section id="pain-points" class="py-24 md:py-32 px-6 bg-yokan-lightGray">
+    <div class="max-w-[1080px] mx-auto">
+      <div class="reveal max-w-2xl mb-12 md:mb-16">
+        <p class="text-sm font-bold tracking-wider uppercase text-yokan-orange mb-2.5">從真實問題開始</p>
+        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-yokan-ink leading-tight">
+          你的品牌卡在哪？
+        </h2>
+        <p class="text-base text-yokan-muted mt-3">
+          點選下方最貼近你目前的品牌現況，看看有感創意如何為你拆解瓶頸：
+        </p>
+      </div>
+
+      <div class="reveal grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <!-- 左側：4 個品牌常見痛點按鈕 -->
+        <div class="lg:col-span-5 flex flex-col gap-3" id="pain-point-list">
+          <button type="button" data-index="0" class="pain-btn active text-left p-5 rounded-2xl bg-white border-2 border-yokan-blue shadow-sm transition-all flex items-center justify-between group">
+            <div>
+              <span class="text-[11px] font-mono font-semibold text-yokan-blue">BOTTLENECK 01</span>
+              <div class="text-base sm:text-lg font-bold text-yokan-ink mt-0.5">拍了短影音卻記不住品牌？</div>
+            </div>
+            <i class="fa-solid fa-arrow-right text-yokan-blue transition-transform group-hover:translate-x-1"></i>
+          </button>
+
+          <button type="button" data-index="1" class="pain-btn text-left p-5 rounded-2xl bg-white/70 hover:bg-white border-2 border-transparent transition-all flex items-center justify-between group">
+            <div>
+              <span class="text-[11px] font-mono font-semibold text-yokan-muted">BOTTLENECK 02</span>
+              <div class="text-base sm:text-lg font-bold text-yokan-ink mt-0.5">貼文有流量卻沒轉換？</div>
+            </div>
+            <i class="fa-solid fa-arrow-right text-yokan-muted transition-transform group-hover:translate-x-1"></i>
+          </button>
+
+          <button type="button" data-index="2" class="pain-btn text-left p-5 rounded-2xl bg-white/70 hover:bg-white border-2 border-transparent transition-all flex items-center justify-between group">
+            <div>
+              <span class="text-[11px] font-mono font-semibold text-yokan-muted">BOTTLENECK 03</span>
+              <div class="text-base sm:text-lg font-bold text-yokan-ink mt-0.5">視覺與訊息太分散、缺乏一致感？</div>
+            </div>
+            <i class="fa-solid fa-arrow-right text-yokan-muted transition-transform group-hover:translate-x-1"></i>
+          </button>
+
+          <button type="button" data-index="3" class="pain-btn text-left p-5 rounded-2xl bg-white/70 hover:bg-white border-2 border-transparent transition-all flex items-center justify-between group">
+            <div>
+              <span class="text-[11px] font-mono font-semibold text-yokan-muted">BOTTLENECK 04</span>
+              <div class="text-base sm:text-lg font-bold text-yokan-ink mt-0.5">產品很好，卻不知道該拍什麼、說什麼？</div>
+            </div>
+            <i class="fa-solid fa-arrow-right text-yokan-muted transition-transform group-hover:translate-x-1"></i>
+          </button>
+        </div>
+
+        <!-- 右側：即時更新的 YOKAN / RESPONSE 診斷卡片 -->
+        <div class="lg:col-span-7 rounded-[28px] bg-white p-8 sm:p-11 border border-yokan-blue/15 shadow-lg flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-44 h-44 bg-gradient-to-bl from-yokan-orange/10 via-yokan-blue/5 to-transparent rounded-bl-full pointer-events-none"></div>
+
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yokan-blue/10 text-yokan-blue text-xs font-mono font-bold tracking-wider mb-6">
+              <span class="w-2 h-2 rounded-full bg-yokan-orange"></span>
+              YOKAN / RESPONSE
+            </div>
+
+            <h3 id="diag-headline" class="text-2xl sm:text-3xl font-extrabold text-yokan-ink leading-snug mb-4">
+              不只記得貼文，更要記得品牌 — 先對齊定位、視覺與內容節奏。
+            </h3>
+
+            <p id="diag-body" class="text-base text-yokan-muted leading-relaxed mb-8">
+              許多短影音為了追逐演算法而犧牲了品牌識別，導致觀看數高卻無法累積信任。我們為你建立專屬的「視覺記憶點」與「系列化腳本結構」，讓觀眾滑過三秒就知道是你。
+            </p>
+          </div>
+
+          <div class="pt-6 border-t border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex flex-wrap gap-2" id="diag-tags">
+              <span class="px-3 py-1 rounded-full bg-yokan-lightGray text-xs font-semibold text-yokan-ink">品牌記憶錨點</span>
+              <span class="px-3 py-1 rounded-full bg-yokan-lightGray text-xs font-semibold text-yokan-ink">系列化內容節奏</span>
+              <span class="px-3 py-1 rounded-full bg-yokan-lightGray text-xs font-semibold text-yokan-ink">識別規範對齊</span>
+            </div>
+            <a href="#contact" class="inline-flex items-center gap-1.5 text-sm font-bold text-yokan-orange hover:text-yokan-orangeHover shrink-0">
+              <span>針對此問題聊聊</span>
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 4. 思考方法切換器（從問題出發，把想法變成行動） ==================== -->
+  <section id="methodology" class="py-24 md:py-32 px-6 bg-white">
+    <div class="max-w-[1080px] mx-auto">
+      <div class="reveal text-center max-w-2xl mx-auto mb-14">
+        <p class="text-sm font-bold tracking-wider uppercase text-yokan-blue mb-2.5">我們怎麼思考</p>
+        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-yokan-ink">
+          從問題出發，把想法變成行動。
+        </h2>
+      </div>
+
+      <!-- 4 步驟互動切換標籤列 -->
+      <div class="reveal grid grid-cols-2 md:grid-cols-4 gap-3 mb-8" id="method-tabs">
+        <button type="button" data-step="0" class="method-tab active p-4 rounded-2xl bg-yokan-blue text-white text-left transition-all shadow-md shadow-blue-500/20">
+          <div class="text-[11px] font-mono opacity-80">STEP 01</div>
+          <div class="text-sm sm:text-base font-bold mt-0.5">問對問題</div>
+        </button>
+        <button type="button" data-step="1" class="method-tab p-4 rounded-2xl bg-yokan-lightGray hover:bg-yokan-blue/10 text-yokan-ink text-left transition-all">
+          <div class="text-[11px] font-mono text-yokan-muted">STEP 02</div>
+          <div class="text-sm sm:text-base font-bold mt-0.5">對齊品牌定位</div>
+        </button>
+        <button type="button" data-step="2" class="method-tab p-4 rounded-2xl bg-yokan-lightGray hover:bg-yokan-blue/10 text-yokan-ink text-left transition-all">
+          <div class="text-[11px] font-mono text-yokan-muted">STEP 03</div>
+          <div class="text-sm sm:text-base font-bold mt-0.5">視覺與影像轉譯</div>
+        </button>
+        <button type="button" data-step="3" class="method-tab p-4 rounded-2xl bg-yokan-lightGray hover:bg-yokan-blue/10 text-yokan-ink text-left transition-all">
+          <div class="text-[11px] font-mono text-yokan-muted">STEP 04</div>
+          <div class="text-sm sm:text-base font-bold mt-0.5">承接與節奏優化</div>
+        </button>
+      </div>
+
+      <!-- 動態 INSIGHT 卡片 -->
+      <div class="reveal rounded-[30px] bg-yokan-paper border border-yokan-ink/10 p-8 sm:p-12 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div class="max-w-2xl">
+            <div id="insight-badge" class="inline-block px-3.5 py-1 rounded-full bg-yokan-orange/15 text-yokan-orange text-xs font-mono font-bold tracking-wider mb-4">
+              INSIGHT / 01
+            </div>
+            <h3 id="insight-title" class="text-2xl sm:text-3xl font-extrabold text-yokan-ink leading-snug mb-4">
+              先弄清楚，顧客為什麼要在乎。
+            </h3>
+            <p id="insight-desc" class="text-base sm:text-lg text-yokan-muted leading-relaxed">
+              從顧客疑問、品牌現況與溝通落差，找出內容真正需要回答的問題。不盲目跟風拍片，而是讓每一支影片、每一頁設計都精準擊中受眾決策的關鍵點。
+            </p>
+          </div>
+
+          <div class="md:w-64 shrink-0 rounded-2xl bg-white p-6 border border-black/[0.06] shadow-xs">
+            <div class="text-xs font-mono text-yokan-blue font-bold mb-2">DELIVERABLE · 階段產出</div>
+            <p id="insight-output" class="text-sm font-semibold text-yokan-ink leading-relaxed">
+              品牌溝通診斷報告、核心受眾痛點地圖、內容切角策略藍圖
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 5. 合作方案 Bento Grid（需要什麼，就從那裡開始） ==================== -->
+  <section id="plans" class="py-24 md:py-32 px-6 bg-yokan-paper">
+    <div class="max-w-[1140px] mx-auto">
+      <div class="reveal text-center max-w-2xl mx-auto mb-16">
+        <p class="text-sm font-bold tracking-wider uppercase text-yokan-orange mb-2.5">合作方式</p>
+        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-yokan-ink">
+          需要什麼，就從那裡開始。
+        </h2>
+        <p class="text-base text-yokan-muted mt-3">
+          無論你需要單點突破的短影音製作，還是完整的品牌數位升級，都能彈性切入合作。
+        </p>
+      </div>
+
+      <!-- 3 大合作方案 Bento Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- 方案 01：短影音製作 -->
+        <div class="reveal bento-card rounded-[30px] bg-white p-8 sm:p-9 border border-yokan-ink/[0.07] flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <span class="px-3.5 py-1 rounded-full bg-yokan-orange/12 text-yokan-orange font-mono text-xs font-extrabold">01</span>
+              <span class="text-xs font-semibold text-yokan-muted">SHORT-FORM VIDEO</span>
+            </div>
+            <h3 class="text-2xl font-extrabold text-yokan-ink mb-2">短影音製作</h3>
+            <p class="text-sm font-semibold text-yokan-orange mb-4">單支、系列與月方案</p>
+            <p class="text-sm text-yokan-muted leading-relaxed mb-6">
+              從選題企劃、腳本分鏡、專業拍攝到高留存剪輯節奏設計，替品牌打造看得下去、也記得住的短影音內容。
+            </p>
+            <ul class="space-y-2.5 text-sm text-yokan-ink/85 border-t border-black/[0.06] pt-5">
+              <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-yokan-orange text-xs"></i> 品牌專屬短影音腳本與風格定調</li>
+              <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-yokan-orange text-xs"></i> 單支試水溫 / 系列企劃 / 月度陪跑</li>
+              <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-yokan-orange text-xs"></i> 黃金前三秒鉤子與視覺字卡設計</li>
+            </ul>
+          </div>
+
+          <button type="button" onclick="selectPlanAndScroll('短影音製作')" class="mt-8 w-full py-3.5 rounded-full bg-yokan-lightGray hover:bg-yokan-orange hover:text-white text-yokan-ink font-semibold text-sm transition-colors">
+            詢問短影音方案 &rarr;
+          </button>
+        </div>
+
+        <!-- 方案 02：社群與廣告（主推深藍質感焦點卡） -->
+        <div class="reveal bento-card-dark rounded-[30px] bg-yokan-navy text-white p-8 sm:p-9 border border-yokan-blue/40 flex flex-col justify-between relative overflow-hidden" style="transition-delay: 90ms;">
+          <div class="absolute -right-12 -top-12 w-40 h-40 rounded-full bg-yokan-blue/25 blur-2xl pointer-events-none"></div>
+
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-6">
+              <span class="px-3.5 py-1 rounded-full bg-yokan-blue text-white font-mono text-xs font-extrabold">02</span>
+              <span class="text-xs font-semibold text-blue-300">SOCIAL & ADS</span>
+            </div>
+            <h3 class="text-2xl font-extrabold text-white mb-2">社群與廣告</h3>
+            <p class="text-sm font-semibold text-blue-300 mb-4">內容經營、投放與承接</p>
+            <p class="text-sm text-white/70 leading-relaxed mb-6">
+              不只追求曝光數字，更重視流量進來後的內容承接。整合社群圖文企劃、廣告素材優化與受眾溝通漏斗。
+            </p>
+            <ul class="space-y-2.5 text-sm text-white/85 border-t border-white/10 pt-5">
+              <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-yokan-orange text-xs"></i> IG / FB 品牌視覺版面與議題規劃</li>
+              <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-yokan-orange text-xs"></i> 高轉換廣告素材設計與 A/B 測試</li>
+              <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-yokan-orange text-xs"></i> 導流落地頁與私訊轉換動線設計</li>
+            </ul>
+          </div>
+
+          <button type="button" onclick="selectPlanAndScroll('社群與廣告')" class="relative z-10 mt-8 w-full py-3.5 rounded-full bg-yokan-orange hover:bg-yokan-orangeHover text-white font-semibold text-sm transition-colors shadow-lg shadow-orange-500/20">
+            詢問社群與廣告 &rarr;
+          </button>
+        </div>
+
+        <!-- 方案 03：品牌與數位 -->
+        <div class="reveal bento-card rounded-[30px] bg-white p-8 sm:p-9 border border-yokan-ink/[0.07] flex flex-col justify-between" style="transition-delay: 180ms;">
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <span class="px-3.5 py-1 rounded-full bg-yokan-blue/12 text-yokan-blue font-mono text-xs font-extrabold">03</span>
+              <span class="text-xs font-semibold text-yokan-muted">BRAND & DIGITAL</span>
+            </div>
+            <h3 class="text-2xl font-extrabold text-yokan-ink mb-2">品牌與數位</h3>
+            <p class="text-sm font-semibold text-yokan-blue mb-4">視覺、網站與自動化</p>
+            <p class="text-sm text-yokan-muted leading-relaxed mb-6">
+              為成長中的品牌打造完整的識別系統與高質感官方網站，並串接 LINE 官方帳號與數位自動化工具，提升營運效率。
+            </p>
+            <ul class="space-y-2.5 text-sm text-yokan-ink/85 border-t border-black/[0.06] pt-5">
+              <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-yokan-blue text-xs"></i> 品牌識別重塑（Logo / 色彩 / 規範）</li>
+              <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-yokan-blue text-xs"></i> 響應式品牌官網與一頁式銷售頁</li>
+              <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-yokan-blue text-xs"></i> LINE OA 圖文選單與表單自動化串接</li>
+            </ul>
+          </div>
+
+          <button type="button" onclick="selectPlanAndScroll('品牌與數位')" class="mt-8 w-full py-3.5 rounded-full bg-yokan-lightGray hover:bg-yokan-blue hover:text-white text-yokan-ink font-semibold text-sm transition-colors">
+            詢問品牌與數位 &rarr;
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 6. 有感的工作觀（深藍劇院級視覺區塊） ==================== -->
+  <section id="about" class="py-24 md:py-36 px-6 bg-yokan-navy text-white relative overflow-hidden">
+    <!-- 藍橘雙色光暈 -->
+    <div class="ambient-glow absolute -top-24 left-1/4 w-96 h-96 rounded-full bg-yokan-blue/25 blur-[120px] pointer-events-none"></div>
+    <div class="ambient-glow absolute -bottom-24 right-1/4 w-96 h-96 rounded-full bg-yokan-orange/20 blur-[120px] pointer-events-none" style="animation-delay: 3s;"></div>
+
+    <div class="relative z-10 max-w-[960px] mx-auto text-center">
+      <div class="reveal">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-white/10 text-blue-300 text-xs font-bold tracking-widest uppercase mb-5">
+          有感的工作觀
+        </span>
+        <h2 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.12] text-gradient-light mb-7">
+          把複雜的事，說得剛剛好。
+        </h2>
+        <p class="max-w-2xl mx-auto text-lg sm:text-2xl text-white/75 leading-relaxed font-normal mb-14">
+          我們先找出顧客在意的事，再決定哪些值得拍、哪些需要設計，哪些交給工具處理。
+        </p>
+      </div>
+
+      <!-- 三大原則精簡卡片 -->
+      <div class="reveal grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+        <div class="rounded-3xl bg-white/[0.05] border border-white/10 p-7 backdrop-blur-md">
+          <div class="text-yokan-orange font-mono text-xs font-bold mb-2">PRINCIPLE 01</div>
+          <h3 class="text-lg font-bold text-white mb-2">不為做而做，先對齊目的</h3>
+          <p class="text-sm text-white/65 leading-relaxed">
+            每一個設計決策與鏡頭語言，都必須服務於「讓顧客更快理解你的價值」。
+          </p>
+        </div>
+        <div class="rounded-3xl bg-white/[0.05] border border-white/10 p-7 backdrop-blur-md">
+          <div class="text-blue-400 font-mono text-xs font-bold mb-2">PRINCIPLE 02</div>
+          <h3 class="text-lg font-bold text-white mb-2">跨媒介的一致美感</h3>
+          <p class="text-sm text-white/65 leading-relaxed">
+            從短影音封面、社群貼文到官方網站，建立統一的藍橘能量與清晰排版語彙。
+          </p>
+        </div>
+        <div class="rounded-3xl bg-white/[0.05] border border-white/10 p-7 backdrop-blur-md">
+          <div class="text-yokan-orange font-mono text-xs font-bold mb-2">PRINCIPLE 03</div>
+          <h3 class="text-lg font-bold text-white mb-2">善用數位與自動化工具</h3>
+          <p class="text-sm text-white/65 leading-relaxed">
+            把重複性的流程交給系統工具，讓團隊把時間專注在真正需要創造力的地方。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 7. 專案諮詢與社群聯絡區塊 ==================== -->
+  <section id="contact" class="py-24 md:py-32 px-6 bg-yokan-paper">
+    <div class="max-w-[1040px] mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+
+        <!-- 左側號召文案與官方社群直連 -->
+        <div class="reveal lg:col-span-5">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-yokan-orange/12 text-yokan-orange text-xs font-bold tracking-wide mb-4">
+            有個想法，就值得聊聊 • 好點子從對話開始
+          </div>
+          <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-yokan-ink leading-[1.12] mb-5">
+            有想法？<br />我們一起把它做好。
+          </h2>
+          <p class="text-base text-yokan-muted leading-relaxed mb-8">
+            不用先準備完整企劃。我們從眼前的問題開始聊，幫你梳理出最適合現階段的品牌行動方案。
+          </p>
+
+          <!-- 官方社群快速聯繫卡片 -->
+          <div class="space-y-3 pt-6 border-t border-black/[0.08]">
+            <a href="https://lin.ee/oUNAjwH" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-2xl bg-white border border-yokan-ink/10 hover:border-[#06C755] transition-all group">
+              <div class="flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-[#06C755]/15 text-[#06C755] flex items-center justify-center text-lg">
+                  <i class="fa-brands fa-line"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-bold text-yokan-ink">LINE 官方帳號</div>
+                  <div class="text-xs text-yokan-muted">一對一快速線上諮詢</div>
+                </div>
+              </div>
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs text-yokan-muted group-hover:text-[#06C755]"></i>
+            </a>
+
+            <a href="https://www.instagram.com/yokancreative/" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-2xl bg-white border border-yokan-ink/10 hover:border-yokan-orange transition-all group">
+              <div class="flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-yokan-orange/15 text-yokan-orange flex items-center justify-center text-lg">
+                  <i class="fa-brands fa-instagram"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-bold text-yokan-ink">Instagram @yokancreative</div>
+                  <div class="text-xs text-yokan-muted">查看最新動態與幕後花絮</div>
+                </div>
+              </div>
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs text-yokan-muted group-hover:text-yokan-orange"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- 右側互動諮詢表單 -->
+        <div class="reveal lg:col-span-7 rounded-[30px] bg-white border border-yokan-blue/15 shadow-xl p-7 sm:p-10">
+          <form id="inquiry-form" class="space-y-6">
+            <!-- 合作方向多選標籤 -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-yokan-muted mb-3">想聊的合作方向（可複選）</label>
+              <div class="flex flex-wrap gap-2" id="service-tags">
+                <button type="button" data-service="短影音製作" class="service-tag px-4 py-2 rounded-full text-xs font-semibold bg-yokan-lightGray text-yokan-ink hover:bg-yokan-blue/10 transition-all">
+                  短影音製作
+                </button>
+                <button type="button" data-service="社群與廣告" class="service-tag px-4 py-2 rounded-full text-xs font-semibold bg-yokan-lightGray text-yokan-ink hover:bg-yokan-blue/10 transition-all">
+                  社群與廣告
+                </button>
+                <button type="button" data-service="品牌與數位" class="service-tag px-4 py-2 rounded-full text-xs font-semibold bg-yokan-lightGray text-yokan-ink hover:bg-yokan-blue/10 transition-all">
+                  品牌與數位
+                </button>
+                <button type="button" data-service="品牌整體診斷" class="service-tag px-4 py-2 rounded-full text-xs font-semibold bg-yokan-lightGray text-yokan-ink hover:bg-yokan-blue/10 transition-all">
+                  品牌整體診斷
+                </button>
+              </div>
+            </div>
+
+            <!-- 姓名與聯絡方式 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="client-name" class="block text-xs font-semibold text-yokan-ink mb-2">你的稱呼 / 品牌名稱 *</label>
+                <input
+                  type="text"
+                  id="client-name"
+                  required
+                  placeholder="例如：王小明 / 某品牌行銷"
+                  class="w-full rounded-2xl bg-yokan-lightGray/70 border border-black/10 px-4 py-3.5 text-sm text-yokan-ink placeholder-yokan-muted/60 focus:outline-none focus:border-yokan-blue focus:bg-white transition-colors"
+                />
+              </div>
+              <div>
+                <label for="client-email" class="block text-xs font-semibold text-yokan-ink mb-2">Email 或 LINE ID *</label>
+                <input
+                  type="text"
+                  id="client-email"
+                  required
+                  placeholder="name@brand.com 或 @lineid"
+                  class="w-full rounded-2xl bg-yokan-lightGray/70 border border-black/10 px-4 py-3.5 text-sm text-yokan-ink placeholder-yokan-muted/60 focus:outline-none focus:border-yokan-blue focus:bg-white transition-colors"
+                />
+              </div>
+            </div>
+
+            <!-- 目前遇到的問題或想法 -->
+            <div>
+              <label for="client-message" class="block text-xs font-semibold text-yokan-ink mb-2">現在卡在哪裡，或想完成什麼目標？ *</label>
+              <textarea
+                id="client-message"
+                rows="4"
+                required
+                placeholder="不用寫得很正式，簡單告訴我們你目前的品牌狀況或想嘗試的方向即可..."
+                class="w-full rounded-2xl bg-yokan-lightGray/70 border border-black/10 px-4 py-3.5 text-sm text-yokan-ink placeholder-yokan-muted/60 focus:outline-none focus:border-yokan-blue focus:bg-white transition-colors resize-none"
+              ></textarea>
+            </div>
+
+            <!-- 送出按鈕 -->
+            <button
+              type="submit"
+              class="w-full py-4 rounded-full bg-gradient-to-r from-yokan-blue to-yokan-orange hover:opacity-95 text-white font-bold text-sm transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2"
+            >
+              <span>送出訊息，開始對話</span>
+              <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+          </form>
+
+          <!-- 表單送出成功回饋 -->
+          <div id="form-success" class="hidden text-center py-10 space-y-4">
+            <div class="w-14 h-14 rounded-full bg-yokan-blue/15 text-yokan-blue flex items-center justify-center mx-auto text-2xl">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-yokan-ink">收到你的訊息了！</h3>
+            <p class="text-sm text-yokan-muted max-w-md mx-auto leading-relaxed">
+              感謝與有感創意聯繫。我們會先針對你提到的問題做初步整理，並盡快透過 Email 或 LINE 與你展開對話。
+            </p>
+            <button
+              type="button"
+              onclick="resetForm()"
+              class="mt-4 px-6 py-2.5 rounded-full bg-yokan-lightGray hover:bg-yokan-blue hover:text-white text-xs font-semibold text-yokan-ink transition-colors"
+            >
+              再留一則訊息
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 8. 官方頁尾（藍橘雙層對話泡泡 Logo + BACK TO TOP） ==================== -->
+  <footer class="bg-white text-yokan-muted text-xs border-t border-black/[0.07] py-14 px-6">
+    <div class="max-w-[1140px] mx-auto">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-black/[0.07]">
+        <div class="flex items-center gap-3.5">
+          <!-- 藍橘雙層對話泡泡 Logo -->
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 shrink-0">
+            <path d="M16 7C24.8366 7 32 12.8203 32 20C32 27.1797 24.8366 33 16 33C13.68 33 11.48 32.59 9.5 31.86L4.5 34.5L6.2 29.4C4.2 27.05 3 23.7 3 20C3 12.8203 10.1634 7 16 7Z" fill="#FF6B2C"/>
+            <path d="M24 11C31.1797 11 37 15.9249 37 22C37 25.12 35.46 27.93 33 29.92L34.4 34.2L29.9 32.02C28.1 32.65 26.1 33 24 33C16.8203 33 11 28.0751 11 22C11 15.9249 16.8203 11 24 11Z" fill="#1D5BFF" fill-opacity="0.95"/>
+            <circle cx="20" cy="22" r="1.6" fill="#FFFFFF"/>
+            <circle cx="24.5" cy="22" r="1.6" fill="#FFFFFF"/>
+            <circle cx="29" cy="22" r="1.6" fill="#FFFFFF"/>
+          </svg>
+          <div>
+            <div class="font-bold text-yokan-ink text-sm">每個想法都值得好好說清楚</div>
+            <div class="text-yokan-muted mt-0.5">YOKAN CREATIVE｜有感創意</div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-5 text-yokan-ink/75">
+          <a href="https://www.instagram.com/yokancreative/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-9 h-9 rounded-full bg-yokan-lightGray hover:bg-yokan-orange hover:text-white flex items-center justify-center transition-colors">
+            <i class="fa-brands fa-instagram text-sm"></i>
+          </a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="w-9 h-9 rounded-full bg-yokan-lightGray hover:bg-yokan-blue hover:text-white flex items-center justify-center transition-colors">
+            <i class="fa-brands fa-facebook-f text-sm"></i>
+          </a>
+          <a href="https://lin.ee/oUNAjwH" target="_blank" rel="noopener noreferrer" aria-label="LINE" class="w-9 h-9 rounded-full bg-yokan-lightGray hover:bg-[#06C755] hover:text-white flex items-center justify-center transition-colors">
+            <i class="fa-brands fa-line text-sm"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <p>&copy; 2026 YOKAN CREATIVE. All rights reserved.</p>
+        <a href="#hero" class="inline-flex items-center gap-1.5 font-mono font-bold text-yokan-blue hover:text-yokan-orange transition-colors">
+          <span>BACK TO TOP</span>
+          <span>&uarr;</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== 互動邏輯腳本 ==================== -->
+  <script>
+    // 1. 滾動顯現動畫 (Intersection Observer)
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    revealElements.forEach((el) => revealObserver.observe(el));
+
+    // 2. 手機版選單開關
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    mobileLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+    // 3. 互動式品牌痛點診斷資料與切換
+    const painDiagnostics = [
+      {
+        headline: '不只記得貼文，更要記得品牌 — 先對齊定位、視覺與內容節奏。',
+        body: '許多短影音為了追逐演算法而犧牲了品牌識別，導致觀看數高卻無法累積信任。我們為你建立專屬的「視覺記憶點」與「系列化腳本結構」，讓觀眾滑過三秒就知道是你。',
+        tags: ['品牌記憶錨點', '系列化內容節奏', '識別規範對齊']
+      },
+      {
+        headline: '把「看熱鬧的流量」轉化為「願意買單的信任」。',
+        body: '有流量卻沒轉換，通常是因為內容與後續承接斷層。我們重新梳理受眾從滑到貼文、點擊主頁到私訊或官網的每一步動線，把疑問在轉換前就說清楚。',
+        tags: ['轉換漏斗設計', '高說服力內容結構', '落地頁與私訊承接']
+      },
+      {
+        headline: '統一視覺語言，讓品牌在每個接觸點都專業一致。',
+        body: '當官網、社群貼文與短影音各自為政，顧客會對品牌產生猶豫。我們透過標準化的色彩比例、字體層級與版型系統，讓團隊後續產出也能維持一致高質感。',
+        tags: ['藍橘視覺規範系統', '社群模板建立', '跨媒介品牌一致性']
+      },
+      {
+        headline: '不用硬擠靈感，從顧客最常問的 10 個問題開始拍。',
+        body: '好內容不是憑空想像，而是回應真實需求。我們協助你盤點產品優勢與受眾猶豫點，轉化為可持續執行的月度選題庫與拍攝腳本。',
+        tags: ['受眾痛點選題庫', '腳本結構化模組', '低摩擦拍攝流程']
+      }
+    ];
+
+    const painBtns = document.querySelectorAll('.pain-btn');
+    const diagHeadline = document.getElementById('diag-headline');
+    const diagBody = document.getElementById('diag-body');
+    const diagTags = document.getElementById('diag-tags');
+
+    painBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        painBtns.forEach((b) => {
+          b.classList.remove('active', 'bg-white', 'border-yokan-blue', 'shadow-sm');
+          b.classList.add('bg-white/70', 'border-transparent');
+          b.querySelector('span').classList.replace('text-yokan-blue', 'text-yokan-muted');
+          b.querySelector('i').classList.replace('text-yokan-blue', 'text-yokan-muted');
+        });
+
+        btn.classList.add('active', 'bg-white', 'border-yokan-blue', 'shadow-sm');
+        btn.classList.remove('bg-white/70', 'border-transparent');
+        btn.querySelector('span').classList.replace('text-yokan-muted', 'text-yokan-blue');
+        btn.querySelector('i').classList.replace('text-yokan-muted', 'text-yokan-blue');
+
+        const idx = parseInt(btn.getAttribute('data-index'), 10);
+        const item = painDiagnostics[idx];
+
+        diagHeadline.textContent = item.headline;
+        diagBody.textContent = item.body;
+        diagTags.innerHTML = item.tags
+          .map((t) => `<span class="px-3 py-1 rounded-full bg-yokan-lightGray text-xs font-semibold text-yokan-ink">${t}</span>`)
+          .join('');
+      });
+    });
+
+    // 4. 思考方法 4 步驟切換
+    const methodologySteps = [
+      {
+        badge: 'INSIGHT / 01',
+        title: '先弄清楚，顧客為什麼要在乎。',
+        desc: '從顧客疑問、品牌現況與溝通落差，找出內容真正需要回答的問題。不盲目跟風拍片，而是讓每一支影片、每一頁設計都精準擊中受眾決策的關鍵點。',
+        output: '品牌溝通診斷報告、核心受眾痛點地圖、內容切角策略藍圖'
+      },
+      {
+        badge: 'INSIGHT / 02',
+        title: '把品牌優勢翻譯成一句聽得懂的話。',
+        desc: '剔除艱澀的行業術語，替品牌找到最鮮明的記憶點與說話語氣，確保團隊在對外溝通時有統一且具說服力的核心主張。',
+        output: '品牌核心訊息架構、Tone of Voice 語氣指南、差異化定位矩陣'
+      },
+      {
+        badge: 'INSIGHT / 03',
+        title: '用對的媒介，呈現剛剛好的質感。',
+        desc: '依據訊息特性決定最適合的表現形式——需要情緒感染力的交給短影音，需要深度信任的交給品牌視覺與官方網站。',
+        output: '短影音分鏡腳本、品牌視覺設計稿、高轉換網頁介面原型'
+      },
+      {
+        badge: 'INSIGHT / 04',
+        title: '讓數據說話，建立可持續的成長節奏。',
+        desc: '內容上線只是開始。我們追蹤完播率、互動深度與實際諮詢轉換，持續微調內容節奏並導入自動化承接工具。',
+        output: '內容成效複盤優化、廣告素材迭代建議、數位承接自動化流程'
+      }
+    ];
+
+    const methodTabs = document.querySelectorAll('.method-tab');
+    const insightBadge = document.getElementById('insight-badge');
+    const insightTitle = document.getElementById('insight-title');
+    const insightDesc = document.getElementById('insight-desc');
+    const insightOutput = document.getElementById('insight-output');
+
+    methodTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        methodTabs.forEach((t) => {
+          t.classList.remove('active', 'bg-yokan-blue', 'text-white', 'shadow-md', 'shadow-blue-500/20');
+          t.classList.add('bg-yokan-lightGray', 'text-yokan-ink');
+          t.querySelector('div').classList.remove('opacity-80');
+          t.querySelector('div').classList.add('text-yokan-muted');
+        });
+
+        tab.classList.add('active', 'bg-yokan-blue', 'text-white', 'shadow-md', 'shadow-blue-500/20');
+        tab.classList.remove('bg-yokan-lightGray', 'text-yokan-ink');
+        tab.querySelector('div').classList.remove('text-yokan-muted');
+        tab.querySelector('div').classList.add('opacity-80');
+
+        const stepIdx = parseInt(tab.getAttribute('data-step'), 10);
+        const step = methodologySteps[stepIdx];
+
+        insightBadge.textContent = step.badge;
+        insightTitle.textContent = step.title;
+        insightDesc.textContent = step.desc;
+        insightOutput.textContent = step.output;
+      });
+    });
+
+    // 5. 點擊合作方案卡片自動勾選並捲動至表單
+    const serviceTags = document.querySelectorAll('.service-tag');
+
+    function toggleTagState(tag, forceActive = null) {
+      const shouldActivate = forceActive !== null ? forceActive : !tag.classList.contains('bg-yokan-blue');
+      if (shouldActivate) {
+        tag.classList.remove('bg-yokan-lightGray', 'text-yokan-ink');
+        tag.classList.add('bg-yokan-blue', 'text-white');
+      } else {
+        tag.classList.remove('bg-yokan-blue', 'text-white');
+        tag.classList.add('bg-yokan-lightGray', 'text-yokan-ink');
+      }
+    }
+
+    serviceTags.forEach((tag) => {
+      tag.addEventListener('click', () => toggleTagState(tag));
+    });
+
+    function selectPlanAndScroll(planName) {
+      serviceTags.forEach((tag) => {
+        if (tag.getAttribute('data-service') === planName) {
+          toggleTagState(tag, true);
+        }
+      });
+      document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 6. 表單送出與重設
+    const inquiryForm = document.getElementById('inquiry-form');
+    const formSuccess = document.getElementById('form-success');
+
+    inquiryForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      inquiryForm.classList.add('hidden');
+      formSuccess.classList.remove('hidden');
+    });
+
+    function resetForm() {
+      inquiryForm.reset();
+      serviceTags.forEach((tag) => toggleTagState(tag, false));
+      formSuccess.classList.add('hidden');
+      inquiryForm.classList.remove('hidden');
+    }
+  </script>
 </body>
 </html>
